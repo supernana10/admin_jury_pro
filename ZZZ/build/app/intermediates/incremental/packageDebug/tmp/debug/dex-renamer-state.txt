@@ -1,4 +1,0 @@
-#Wed Feb 24 15:53:12 GMT 2021
-base.0=/Users/imacoda07/Desktop/Aurore/admin_jury_pro/build/app/intermediates/dex/debug/mergeDexDebug/out/classes.dex
-path.0=classes.dex
-renamed.0=classes.dex
