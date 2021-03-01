@@ -1,6 +1,6 @@
-import 'package:admin_jury_pro/pages/accueil.dart';
+import 'package:admin_jury_pro/pages/old.dart/splash.dart';
 import 'package:admin_jury_pro/pages/ongletAdmin.dart';
-import 'package:admin_jury_pro/pages/splash.dart';
+
 import 'package:flutter/material.dart';
 
 void main() {

@@ -1,7 +1,8 @@
-import 'package:admin_jury_pro/pages/ajouterEvenement.dart';
 import 'package:admin_jury_pro/pages/deuxiemeOnglet.dart';
+import 'package:admin_jury_pro/pages/old.dart/ajouterEvenement.dart';
+import 'package:admin_jury_pro/pages/old.dart/modifierEvenement.dart';
 //import 'package:admin_jury_pro/pages/candidats.dart';
-import 'package:admin_jury_pro/pages/modifierEvenement.dart';
+
 import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

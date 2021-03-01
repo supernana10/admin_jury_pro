@@ -1,29 +1,14 @@
 import 'dart:convert';
-import 'package:admin_jury_pro/pages/ajouterCandidats.dart';
+import 'package:admin_jury_pro/pages/ajouterJury.dart';
 import 'package:admin_jury_pro/pages/entity/candidat.dart';
-import 'package:admin_jury_pro/pages/modifierCandidats.dart';
+import 'package:admin_jury_pro/pages/modifierJury.dart';
+import 'package:admin_jury_pro/pages/old.dart/ajouterCandidats.dart';
+import 'package:admin_jury_pro/pages/old.dart/modifierCandidats.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:flutter/material.dart';
-
-// void main() => runApp(DeuxiemeOnglet(evenement: evenement));
-
-// class DeuxiemeOnglet extends StatelessWidget {
-//   int evenement;
-//   DeuxiemeOnglet({evenement}) {
-//     this.evenement = evenement;
-//   }
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       home: Example(
-//         evenement: evenement,
-//       ),
-//     );
-//   }
-// }
 
 class Example1 extends StatefulWidget {
   int evenement;
@@ -36,11 +21,15 @@ class Example1 extends StatefulWidget {
 
 class _Example1State extends State<Example1> {
   List candidats;
+  List groupes = [];
+  List jury = [];
+  List datas;
   List evenements;
   int evenement;
-  String get uri => null;
 
+  String get uri => null;
   Future futureCandidat;
+  Future futureJury;
 
   _Example1State(int evenement) {
     this.evenement = evenement;
@@ -61,10 +50,40 @@ class _Example1State extends State<Example1> {
     // print(data);
   }
 
+  Future getDatas() async {
+    var response =
+        await http.get("http://172.31.239.223:8000/jury/evenements/$evenement");
+
+    if (response.statusCode == 200) {
+      setState(() {
+        jury = json.decode(response.body);
+      });
+    } else {
+      throw Exception("Erreur de récupération du jury");
+    }
+    // print("Response : ");
+    // print(data);
+  }
+
   @override
   void initState() {
     super.initState();
     getData();
+  }
+
+  Future deleteJury(uri) async {
+    String _uri = uri;
+
+    var request = http.Request(
+        'POST', Uri.parse('http://172.31.239.223:8000/jury/delete/' + _uri));
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode == 200) {
+      print(await response.stream.bytesToString());
+      print("succes");
+    } else {
+      print(response.reasonPhrase);
+      print("echec");
+    }
   }
 
   Future deleteCandidats(uri) async {
@@ -242,11 +261,131 @@ class _Example1State extends State<Example1> {
                         );
                       },
                     ),
+                    Center(),
                     Center(
-                      child: Icon(Icons.people),
-                    ),
-                    Center(
-                      child: Icon(Icons.how_to_vote),
+                      child: TabBarView(children: <Widget>[
+                        ListView.builder(
+                          padding: EdgeInsets.all(20),
+                          itemCount: (jury.isEmpty) ? 0 : jury.length,
+                          itemBuilder: (BuildContext context, int i) {
+                            return Card(
+                              clipBehavior: Clip.antiAlias,
+                              child: Column(
+                                children: [
+                                  ListTile(
+                                    leading: Icon(Icons.how_to_vote),
+                                    title:
+                                        Text("${datas[i]["jury_nom_complet"]}"),
+                                    subtitle: Text(
+                                      "Code:${datas[i]["code_id"]}",
+                                      style: TextStyle(
+                                          color: Colors.black.withOpacity(0.6)),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Text(
+                                      "Numéro de téléphone:${datas[i]["jury_telephone"]}",
+                                      style: TextStyle(
+                                          color: Colors.black.withOpacity(0.6)),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Text(
+                                      "Email: ${datas[i]["jury_email"]}",
+                                      style: TextStyle(
+                                          color: Colors.black.withOpacity(0.6)),
+                                    ),
+                                  ),
+                                  ButtonBar(
+                                      alignment: MainAxisAlignment.end,
+                                      children: [
+                                        FlatButton(
+                                          textColor: Colors.black,
+                                          color: Colors.orange[800],
+                                          onPressed: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (BuildContext
+                                                            context) =>
+                                                        AjouterJury()));
+                                            getDatas();
+                                          },
+                                          child: const Text('Ajouter'),
+                                        ),
+                                        FlatButton(
+                                          textColor: Colors.black,
+                                          color: Colors.orange[800],
+                                          onPressed: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (BuildContext
+                                                            context) =>
+                                                        ModifierJury(
+                                                            datas[i])));
+                                            getDatas();
+                                          },
+                                          child: const Text('Modifier'),
+                                        ),
+                                        FlatButton(
+                                          textColor: Colors.white,
+                                          color: Colors.black,
+                                          onPressed: () {
+                                            showCupertinoDialog(
+                                                context: context,
+                                                builder:
+                                                    (_) => CupertinoAlertDialog(
+                                                          title: Text(
+                                                              "Etes-vous sûr de vouloir supprimer ce jury?"),
+                                                          // content: Text(
+                                                          //     "This is the content"),
+                                                          actions: [
+                                                            // Close the dialog
+                                                            CupertinoButton(
+                                                              child: Text("OUI",
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                              .orange[
+                                                                          900])),
+                                                              onPressed: () {
+                                                                this.deleteJury(
+                                                                    "${datas[i]["jury_id"]}"
+                                                                        .toString());
+                                                                print("${datas[i]["jury_id"]}"
+                                                                    .toString());
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                                setState(() {});
+                                                              },
+                                                            ),
+                                                            CupertinoButton(
+                                                                child: Text(
+                                                                    'NON',
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .orange[900])),
+                                                                onPressed: () {
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop();
+                                                                })
+                                                          ],
+                                                        ));
+                                            // Perform some action
+                                          },
+                                          child: const Text('Supprimer'),
+                                        ),
+                                      ]),
+                                ],
+                              ),
+                            );
+                          },
+                        )
+                      ]),
                     ),
                     Center(
                       child: Icon(Icons.mark_as_unread),
