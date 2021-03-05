@@ -16,25 +16,25 @@ class Jury extends StatefulWidget {
 }
 
 class _JuryState extends State<Jury> {
-  List datas;
+  List jury;
   List evenements;
 
   String get uri => null;
 
-  Future getDatas() async {
+  Future getJury() async {
     var response = await http.get("http://172.31.239.223:8000/jury");
-    datas = json.decode(response.body);
+    jury = json.decode(response.body);
     // print("Response : ");
     // print(data);
     setState(() {
-      datas = datas;
+      jury = jury;
     });
   }
 
   @override
   void initState() {
     super.initState();
-    getDatas();
+    getJury();
   }
 
   Future deleteJury(uri) async {
@@ -59,14 +59,14 @@ class _JuryState extends State<Jury> {
           title: Text("Jury Pro"),
           backgroundColor: Colors.deepOrange,
         ),
-        body: datas != null ? getDisplayDatas() : waitDatas());
+        body: jury != null ? getDisplayDatas() : waitDatas());
   }
 
   Widget getDisplayDatas() {
     // print(data[0]);
     return ListView.builder(
       padding: EdgeInsets.all(20),
-      itemCount: datas.length,
+      itemCount: jury.length,
       itemBuilder: (BuildContext context, int i) {
         return Card(
           clipBehavior: Clip.antiAlias,
@@ -74,9 +74,9 @@ class _JuryState extends State<Jury> {
             children: [
               ListTile(
                 leading: Icon(Icons.how_to_vote),
-                title: Text("${datas[i]["jury_nom_complet"]}"),
+                title: Text("${jury[i]["jury_nom_complet"]}"),
                 subtitle: Text(
-                  "Code:${datas[i]["code_id"]}",
+                  "Code:${jury[i]["code_id"]}",
                   style: TextStyle(color: Colors.black.withOpacity(0.6)),
                 ),
               ),
@@ -94,20 +94,20 @@ class _JuryState extends State<Jury> {
                 );
               }), */
               /* Image.memory(
-                Base64Codec().decode(datas[i]["evenementphoto"]),
+                Base64Codec().decode(jury[i]["evenementphoto"]),
                 fit: BoxFit.fill,
               ), */
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
-                  "Numéro de téléphone:${datas[i]["jury_telephone"]}",
+                  "Numéro de téléphone:${jury[i]["jury_telephone"]}",
                   style: TextStyle(color: Colors.black.withOpacity(0.6)),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
-                  "Email: ${datas[i]["jury_email"]}",
+                  "Email: ${jury[i]["jury_email"]}",
                   style: TextStyle(color: Colors.black.withOpacity(0.6)),
                 ),
               ),
@@ -120,7 +120,7 @@ class _JuryState extends State<Jury> {
                         context,
                         MaterialPageRoute(
                             builder: (BuildContext context) => AjouterJury()));
-                    getDatas();
+                    getJury();
                   },
                   child: const Text('Ajouter'),
                 ),
@@ -132,8 +132,8 @@ class _JuryState extends State<Jury> {
                         context,
                         MaterialPageRoute(
                             builder: (BuildContext context) =>
-                                ModifierJury(datas[i])));
-                    getDatas();
+                                ModifierJury(jury[i])));
+                    getJury();
                   },
                   child: const Text('Modifier'),
                 ),
@@ -156,8 +156,8 @@ class _JuryState extends State<Jury> {
                                           TextStyle(color: Colors.orange[900])),
                                   onPressed: () {
                                     this.deleteJury(
-                                        "${datas[i]["jury_id"]}".toString());
-                                    print("${datas[i]["jury_id"]}".toString());
+                                        "${jury[i]["jury_id"]}".toString());
+                                    print("${jury[i]["jury_id"]}".toString());
                                     Navigator.of(context).pop();
                                     setState(() {});
                                   },

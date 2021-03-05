@@ -12,7 +12,7 @@ class ModifierGroupes extends StatefulWidget {
   //final int id;
 
   ModifierGroupes(dynamic data) {
-    this.dataObjetGroupes= data;
+    this.dataObjetGroupes = data;
   }
   /*const ModifierEvenement({
     Key key,
@@ -20,7 +20,8 @@ class ModifierGroupes extends StatefulWidget {
   }) : super(key: key);*/
 
   @override
-  _ModifierGroupesState createState() => _ModifierGroupesState(dataObjetGroupes);
+  _ModifierGroupesState createState() =>
+      _ModifierGroupesState(dataObjetGroupes);
 }
 
 class _ModifierGroupesState extends State<ModifierGroupes> {
@@ -42,19 +43,19 @@ class _ModifierGroupesState extends State<ModifierGroupes> {
   String base64Image;
   File tmpFile;
   String errMessage = 'Error Uploading Image';
- 
-   chooseImage() {
+
+  chooseImage() {
     setState(() {
       file = ImagePicker.pickImage(source: ImageSource.gallery);
     });
     setStatus('');
-  } 
+  }
 
   setStatus(String message) {
     setState(() {
       status = message;
     });
-  } 
+  }
 
   startUpload() {
     setStatus('Uploading Image...');
@@ -64,7 +65,7 @@ class _ModifierGroupesState extends State<ModifierGroupes> {
     }
     String fileName = tmpFile.path.split('/').last;
     upload(fileName);
-  } 
+  }
 
   upload(String fileName) {
     http.post(uploadEndPoint, body: {
@@ -75,7 +76,7 @@ class _ModifierGroupesState extends State<ModifierGroupes> {
     }).catchError((error) {
       setStatus(error);
     });
-  } 
+  }
 
   Widget showImage() {
     return FutureBuilder<File>(
@@ -106,7 +107,7 @@ class _ModifierGroupesState extends State<ModifierGroupes> {
         }
       },
     );
-  } 
+  }
 
   //TextController to read text entered in text field
   TextEditingController nom = TextEditingController();
@@ -117,18 +118,17 @@ class _ModifierGroupesState extends State<ModifierGroupes> {
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
   // ignore: missing_return
-  Future<Map<String, dynamic>> editGroupes(BuildContext context, String nom,
-      String code,  String telephone) async {
+  Future<Map<String, dynamic>> editGroupes(
+      BuildContext context, String nom, String code, String photo) async {
     final http.Response response = await http.post(
       'http://172.31.239.223:8000/groupes/${groupes["groupes_id"]}',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, dynamic>{
-        "groupes_Nom": nom,
-        "groupes_code": code,
-        "groupes_photo": photo,
-        
+        "groupe_Nom": nom,
+        "groupe_code": code,
+        "groupe_photo": photo,
       }),
     );
 
@@ -154,7 +154,7 @@ class _ModifierGroupesState extends State<ModifierGroupes> {
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
-      throw Exception("Echec de la modification du groupes.");
+      throw Exception("Echec de la modification du groupe.");
     }
   }
 
@@ -162,7 +162,7 @@ class _ModifierGroupesState extends State<ModifierGroupes> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Modification d'un groupes"),
+        title: Text("Modification d'un groupe"),
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -180,7 +180,7 @@ class _ModifierGroupesState extends State<ModifierGroupes> {
                             bottom: 15, left: 10, right: 10, top: 20),
                         child: TextFormField(
                           // ignore: unnecessary_brace_in_string_interps
-                          controller: nom..text = groupes["groupes_nom"],
+                          controller: nom..text = groupes["groupe_nom"],
                           keyboardType: TextInputType.text,
                           decoration: buildInputDecoration(Icons.person, "Nom"),
                           validator: (String value) {
@@ -198,7 +198,7 @@ class _ModifierGroupesState extends State<ModifierGroupes> {
                         padding: const EdgeInsets.only(
                             bottom: 15, left: 10, right: 10),
                         child: TextFormField(
-                          controller: code..text = groupes["groupes_code"],
+                          controller: code..text = groupes["groupe_code"],
                           keyboardType: TextInputType.text,
                           decoration: buildInputDecoration(
                               Icons.confirmation_number, "Code"),
@@ -213,7 +213,7 @@ class _ModifierGroupesState extends State<ModifierGroupes> {
                           },
                         ),
                       ),
-                      
+
                       SizedBox(
                           width: 600,
                           height: 50,
@@ -230,8 +230,7 @@ class _ModifierGroupesState extends State<ModifierGroupes> {
                                     );
                                   },
                                   child: Text("Modifier")),
-
-                               RaisedButton(
+                              RaisedButton(
                                 color: Colors.orange,
                                 onPressed: chooseImage,
                                 shape: RoundedRectangleBorder(
@@ -250,7 +249,7 @@ class _ModifierGroupesState extends State<ModifierGroupes> {
                                         color: Colors.black, width: 2)),
                                 textColor: Colors.white,
                                 child: Text("upload"),
-                              ), 
+                              ),
                             ],
                           ))
                     ],

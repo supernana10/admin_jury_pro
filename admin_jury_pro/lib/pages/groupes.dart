@@ -15,25 +15,25 @@ class Groupes extends StatefulWidget {
 }
 
 class _GroupesState extends State<Groupes> {
-  List datas;
+  List groupe;
   List evenements;
 
   String get uri => null;
 
-  Future getDatas() async {
+  Future getGroupe() async {
     var response = await http.get("http://172.31.239.223:8000/groupes");
-    datas = json.decode(response.body);
+    groupe = json.decode(response.body);
     // print("Response : ");
     // print(data);
     setState(() {
-      datas = datas;
+      groupe = groupe;
     });
   }
 
   @override
   void initState() {
     super.initState();
-    getDatas();
+    getGroupe();
   }
 
   Future deleteGroupes(uri) async {
@@ -58,14 +58,14 @@ class _GroupesState extends State<Groupes> {
           title: Text("Jury Pro"),
           backgroundColor: Colors.deepOrange,
         ),
-        body: datas != null ? getDisplayDatas() : waitDatas());
+        body: groupe != null ? getDisplayDatas() : waitDatas());
   }
 
   Widget getDisplayDatas() {
     // print(data[0]);
     return ListView.builder(
       padding: EdgeInsets.all(20),
-      itemCount: datas.length,
+      itemCount: groupe.length,
       itemBuilder: (BuildContext context, int i) {
         return Card(
           clipBehavior: Clip.antiAlias,
@@ -73,9 +73,9 @@ class _GroupesState extends State<Groupes> {
             children: [
               ListTile(
                 leading: Icon(Icons.how_to_vote),
-                title: Text("${datas[i]["groupe_nom"]}"),
+                title: Text("${groupe[i]["groupe_nom"]}"),
                 subtitle: Text(
-                  "Code:${datas[i]["code_id"]}",
+                  "Code:${groupe[i]["code_id"]}",
                   style: TextStyle(color: Colors.black.withOpacity(0.6)),
                 ),
               ),
@@ -93,13 +93,13 @@ class _GroupesState extends State<Groupes> {
                 );
               }),  */
               Image.memory(
-                Base64Codec().decode(datas[i]["groupe_photo"]),
+                Base64Codec().decode(groupe[i]["groupe_photo"]),
                 fit: BoxFit.fill,
               ),
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
-                  "Numéro de téléphone:${datas[i]["groupe_telephone"]}",
+                  "Numéro de téléphone:${groupe[i]["groupe_telephone"]}",
                   style: TextStyle(color: Colors.black.withOpacity(0.6)),
                 ),
               ),
@@ -113,7 +113,7 @@ class _GroupesState extends State<Groupes> {
                         MaterialPageRoute(
                             builder: (BuildContext context) =>
                                 AjouterGroupes()));
-                    getDatas();
+                    getGroupe();
                   },
                   child: const Text('Ajouter'),
                 ),
@@ -125,8 +125,8 @@ class _GroupesState extends State<Groupes> {
                         context,
                         MaterialPageRoute(
                             builder: (BuildContext context) =>
-                                ModifierGroupes(datas[i])));
-                    getDatas();
+                                ModifierGroupes(groupe[i])));
+                    getGroupe();
                   },
                   child: const Text('Modifier'),
                 ),
@@ -138,7 +138,7 @@ class _GroupesState extends State<Groupes> {
                         context: context,
                         builder: (_) => CupertinoAlertDialog(
                               title: Text(
-                                  "Etes-vous sûr de vouloir supprimer ce jury?"),
+                                  "Etes-vous sûr de vouloir supprimer ce groupe?"),
                               // content: Text(
                               //     "This is the content"),
                               actions: [
@@ -149,8 +149,8 @@ class _GroupesState extends State<Groupes> {
                                           TextStyle(color: Colors.orange[900])),
                                   onPressed: () {
                                     this.deleteGroupes(
-                                        "${datas[i]["jury_id"]}".toString());
-                                    print("${datas[i]["jury_id"]}".toString());
+                                        "${groupe[i]["groupe_id"]}".toString());
+                                    print("${groupe[i]["groupe_id"]}".toString());
                                     Navigator.of(context).pop();
                                     setState(() {});
                                   },

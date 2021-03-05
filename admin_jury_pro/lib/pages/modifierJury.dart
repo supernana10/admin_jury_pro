@@ -126,8 +126,8 @@ class _ModifierJuryState extends State<ModifierJury> {
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, dynamic>{
-        "jury_Nom": nom,
-        "jury_code": code,
+        "jury_Nom_complet": nom,
+        "code_id": code,
         "jury_telephone": telephone,
         "jury_email": email,
       }),
@@ -181,7 +181,7 @@ class _ModifierJuryState extends State<ModifierJury> {
                             bottom: 15, left: 10, right: 10, top: 20),
                         child: TextFormField(
                           // ignore: unnecessary_brace_in_string_interps
-                          controller: nom..text = jury["jury_nom"],
+                          controller: nom..text = jury["jury_nom_complet"],
                           keyboardType: TextInputType.text,
                           decoration: buildInputDecoration(Icons.person, "Nom"),
                           validator: (String value) {
@@ -199,7 +199,7 @@ class _ModifierJuryState extends State<ModifierJury> {
                         padding: const EdgeInsets.only(
                             bottom: 15, left: 10, right: 10),
                         child: TextFormField(
-                          controller: code..text = jury["jury_code"],
+                          controller: code..text = jury["code_id"],
                           keyboardType: TextInputType.text,
                           decoration: buildInputDecoration(
                               Icons.confirmation_number, "Code"),

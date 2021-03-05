@@ -20,24 +20,24 @@ class Candidats extends StatefulWidget {
 }
 
 class _HomePageState extends State<Candidats> {
-  List data;
+  List candidat;
   List evenements;
 
-  Future getData() async {
+  Future getCandidat() async {
     http.Response response =
         await http.get("http://172.31.239.223:8000/candidats");
-    data = json.decode(response.body);
+    candidat = json.decode(response.body);
     // print("Response : ");
-    // print(data);
+    // print(candidat);
     setState(() {
-      data = data;
+      candidat = candidat;
     });
   }
 
   @override
   void initState() {
     super.initState();
-    getData();
+    getCandidat();
   }
 
   @override
@@ -49,11 +49,11 @@ class _HomePageState extends State<Candidats> {
       ),
       body: ListView.builder(
         padding: EdgeInsets.all(20),
-        itemCount: data == null ? 0 : data.length,
+        itemCount: candidat == null ? 0 : candidat.length,
         itemBuilder: (BuildContext context, int index) {
           Uint8List bytes;
-          if (data[index]["candidat_photo"] != null) {
-            bytes = base64Decode(data[index]["candidat_photo"]);
+          if (candidat[index]["candidat_photo"] != null) {
+            bytes = base64Decode(candidat[index]["candidat_photo"]);
           }
 
           return Card(
@@ -83,7 +83,7 @@ class _HomePageState extends State<Candidats> {
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
-                    "${data[index]["candidat_nom"]} ${data[index]["candidat_prenom"]}",
+                    "${candidat[index]["candidat_nom"]} ${candidat[index]["candidat_prenom"]}",
                     style: TextStyle(
                       color: Colors.black.withOpacity(0.9),
                       fontWeight: FontWeight.bold,
@@ -100,7 +100,7 @@ class _HomePageState extends State<Candidats> {
                           context,
                           MaterialPageRoute(
                               builder: (BuildContext context) => DetailCandidat(
-                                  "${data[index]["candidat_id"]}")));
+                                  "${candidat[index]["candidat_id"]}")));
                     },
                     child: const Text(
                       'Details',
